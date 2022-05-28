@@ -4,6 +4,7 @@ import 'express-async-errors';
 import {handleError} from "./utils/errors";
 import {config} from "./config/config";
 import rateLimit from "express-rate-limit";
+import {shopRouter} from "./routers/shop.router";
 
 const app = express();
 
@@ -15,6 +16,8 @@ app.use(rateLimit({
     windowMs: 5 * 60 * 1000, // 5 minutes
     max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
 }));
+
+app.use('/shops', shopRouter);
 
 app.use(handleError);
 
