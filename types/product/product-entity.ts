@@ -6,7 +6,8 @@ export interface ProductEntity {
     shop_id: string;
 }
 
-export interface NewProductEntity extends Omit<ProductEntity, 'description' | 'shop_id'> {
+export interface NewProductEntity extends Omit<ProductEntity, 'description' | 'shop_id' | 'id'> {
+    id?: string,
     description?: string;
     shop_id?: string;
 }

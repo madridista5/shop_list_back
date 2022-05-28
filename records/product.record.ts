@@ -17,7 +17,7 @@ export class ProductRecord implements ProductEntity {
             throw new ValidationError('Cena musi zostać podana i nie może przekraczać: 999999.99');
         }
 
-        if(obj.description.length > 200) {
+        if(obj.description && obj.description.length > 200) {
             throw new ValidationError('Opis nie może przekraczać 200 znaków.');
         }
 

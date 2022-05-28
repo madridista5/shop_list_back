@@ -18,7 +18,7 @@ export class ShopRecord implements ShopEntity {
             throw new ValidationError('Kategoria produktu nie może być pusta, ani przekraczać 30 znaków.');
         }
 
-        if(obj.url.length > 100) {
+        if(obj.url && obj.url.length > 100) {
             throw new ValidationError('Adres do strony www nie może przekraczać 100 znaków.');
         }
 
