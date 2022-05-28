@@ -1,5 +1,10 @@
 import {NewProductEntity, ProductEntity} from "../types/product";
 import {ValidationError} from "../utils/errors";
+import {pool} from "../utils/db";
+import {FieldPacket} from "mysql2";
+import {v4 as uuid} from 'uuid';
+
+type ProductRecordResults = [ProductRecord[], FieldPacket[]];
 
 export class ProductRecord implements ProductEntity {
     id: string;
@@ -26,5 +31,40 @@ export class ProductRecord implements ProductEntity {
         this.price = obj.price;
         this.description = obj.description;
         this.shop_id = obj.shop_id;
+    }
+
+    static async getOne(id: string): Promise<ProductRecord | null> {
+        const [results] = await pool.execute("SELECT * FROM `products` WHERE `id` = :id", {
+            id,
+        }) as ProductRecordResults;
+        return results.length > 0 ? new ProductRecord(results[0]) : null;
+    }
+
+    static async getAll(): Promise<ProductRecord[]> {
+        const [results] = await pool.execute("SELECT * FROM `products`") as ProductRecordResults;
+        return results.map(product => new ProductRecord(product));
+    }
+
+    async insert(): Promise<string> {
+        if (!this.id) {
+            this.id = uuid();
+        } else {
+            throw new ValidationError('Ten produkt został już dodany.');
+        }
+        await pool.execute("INSERT INTO `products` VALUES(:id, :name, :price, :description, :shop_id)", {
+            id: this.id,
+            name: this.name,
+            price: this.price,
+            description: this.description ?? null,
+            shop_id: this.shop_id ?? null,
+        });
+
+        return this.id;
+    }
+
+    async delete(): Promise<void> {
+        await pool.execute("DELETE FROM `products` WHERE `id` = :id", {
+            id: this.id,
+        });
     }
 }
