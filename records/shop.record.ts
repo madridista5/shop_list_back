@@ -1,4 +1,4 @@
-import {NewShopEntity, ShopEntity} from "../types/shop";
+import {NewShopEntity, ShopEntity} from "../types";
 import { pool } from "../utils/db";
 import {ValidationError} from "../utils/errors";
 import {FieldPacket} from "mysql2";
@@ -48,6 +48,13 @@ export class ShopRecord implements ShopEntity {
 
     static async getAll(): Promise<ShopRecord[]> {
         const [results] = await pool.execute("SELECT * FROM `shops`") as ShopRecordResults;
+        return results.map(shop => new ShopRecord(shop));
+    }
+
+    static async getAllShopsWithTheProduct(productName: string): Promise<ShopRecord[]> {
+        const [results] = await pool.execute("SELECT * FROM `shops` JOIN `products` ON `shops`.`id` = `products`.`shop_id` WHERE `products`.`name` = :productName", {
+            productName,
+        }) as ShopRecordResults;
         return results.map(shop => new ShopRecord(shop));
     }
 
