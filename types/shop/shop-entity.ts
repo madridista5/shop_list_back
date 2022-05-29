@@ -1,10 +1,13 @@
-export interface ShopEntity {
-    id: string;
+export interface SimpleShopEntity {
+    id: string,
+    lat: number,
+    lon: number,
+}
+
+export interface ShopEntity extends SimpleShopEntity{
     name: string;
     category: string;
     url: string;
-    lat: number;
-    lon: number;
 }
 
 export interface NewShopEntity extends Omit<ShopEntity, 'id' | 'url'> {
