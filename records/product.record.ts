@@ -1,4 +1,4 @@
-import {NewProductEntity, ProductEntity} from "../types/product";
+import {NewProductEntity, ProductEntity, SimplyProductEntity} from "../types";
 import {ValidationError} from "../utils/errors";
 import {pool} from "../utils/db";
 import {FieldPacket} from "mysql2";
@@ -42,6 +42,13 @@ export class ProductRecord implements ProductEntity {
 
     static async getAll(): Promise<ProductRecord[]> {
         const [results] = await pool.execute("SELECT * FROM `products`") as ProductRecordResults;
+        return results.map(product => new ProductRecord(product));
+    }
+
+    static async getAllProductsFromSingleShop(shopId: string): Promise<SimplyProductEntity[]> {
+        const [results] = await pool.execute("SELECT `products`.`id`, `products`.`name`, `products`.`price` FROM `products` JOIN `shops` ON `products`.`shop_id` = `shops`.`id` WHERE `shops`.`id` = :shopId", {
+            shopId,
+        }) as ProductRecordResults;
         return results.map(product => new ProductRecord(product));
     }
 

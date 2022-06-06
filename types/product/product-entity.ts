@@ -11,3 +11,5 @@ export interface NewProductEntity extends Omit<ProductEntity, 'description' | 's
     description?: string;
     shop_id?: string;
 }
+
+export interface SimplyProductEntity extends Omit<ProductEntity, 'description' | 'shop_id'> {}
