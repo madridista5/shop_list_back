@@ -52,6 +52,14 @@ export class ProductRecord implements ProductEntity {
         return results.map(product => new ProductRecord(product));
     }
 
+    static async getOneProductFromSingleShop(shopId: string, productName: string): Promise<SimplyProductEntity[]> {
+        const [results] = await pool.execute("SELECT `products`.`id`, `products`.`name`, `products`.`price`, `products`.`shop_id` FROM `products` WHERE `shop_id` = :shopId AND `name` = :productName", {
+            shopId,
+            productName,
+        }) as ProductRecordResults;
+        return results.map(product => new ProductRecord(product));
+    }
+
     async insert(): Promise<string> {
         if (!this.id) {
             this.id = uuid();

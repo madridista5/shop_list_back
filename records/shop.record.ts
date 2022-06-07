@@ -52,7 +52,7 @@ export class ShopRecord implements ShopEntity {
     }
 
     static async getAllShopsWithTheProduct(productName: string): Promise<ShopRecord[]> {
-        const [results] = await pool.execute("SELECT `shops`.`id`, `shops`.`name`, `shops`.`category`, `shops`.`url`, `shops`.`lat`, `shops`.`lon`  FROM `shops` JOIN `products` ON `shops`.`id` = `products`.`shop_id` WHERE `products`.`name` = :productName", {
+        const [results] = await pool.execute("SELECT `shops`.`id`, `shops`.`name`, `shops`.`category`, `shops`.`url`, `shops`.`lat`, `shops`.`lon` FROM `shops` JOIN `products` ON `shops`.`id` = `products`.`shop_id` WHERE `products`.`name` = :productName", {
             productName,
         }) as ShopRecordResults;
         return results.map(shop => new ShopRecord(shop));

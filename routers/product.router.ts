@@ -6,6 +6,9 @@ export const productRouter = Router();
 productRouter
     .get('/singleShop/:id', async (req, res) => {
         const allProductsFromSingleShop = await ProductRecord.getAllProductsFromSingleShop(req.params.id);
-        console.log(allProductsFromSingleShop);
         res.json(allProductsFromSingleShop);
+    })
+    .get('/singleProduct/:shopId/:productName', async (req, res) => {
+        const oneProductFromSingleShop = await ProductRecord.getOneProductFromSingleShop(req.params.shopId, req.params.productName);
+        res.json(oneProductFromSingleShop);
     });
