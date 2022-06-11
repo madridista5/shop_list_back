@@ -1,13 +1,29 @@
 import express, {json} from "express";
 import cors from 'cors';
 import 'express-async-errors';
+import {handleError} from "./utils/errors";
+import {config} from "./config/config";
+import rateLimit from "express-rate-limit";
+import {shopRouter} from "./routers/shop.router";
+import {productRouter} from "./routers/product.router";
+import {allDataRouter} from "./routers/all.data.router";
 
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: config.corsOrigin,
 }));
 app.use(json());
+app.use(rateLimit({
+    windowMs: 5 * 60 * 1000, // 5 minutes
+    max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+}));
+
+app.use('/shops', shopRouter);
+app.use('/products', productRouter);
+app.use('/allData', allDataRouter);
+
+app.use(handleError);
 
 app.listen(3001, '0.0.0.0',() => {
     console.log('Listening on http://localhost:3001');
