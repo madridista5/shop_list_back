@@ -1,4 +1,5 @@
 export interface AllProductsShopsData {
+    productId: string
     productName: string,
     productPrice: number,
     description: string,

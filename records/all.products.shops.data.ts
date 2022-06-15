@@ -6,6 +6,7 @@ import {FieldPacket} from "mysql2";
 type AllProductsShopsDataRecords = [AllProductsShopsData[], FieldPacket[]];
 
 export class AllProductsShopsDataRecord implements AllProductsShopsData {
+    productId: string
     productName: string;
     productPrice: number;
     description: string;
@@ -39,6 +40,7 @@ export class AllProductsShopsDataRecord implements AllProductsShopsData {
             throw new ValidationError('Adres do strony www nie może przekraczać 100 znaków.');
         }
 
+        this.productId = obj.productId;
         this.productName = obj.productName;
         this.productPrice = obj.productPrice;
         this.description = obj.description;
@@ -49,7 +51,7 @@ export class AllProductsShopsDataRecord implements AllProductsShopsData {
     }
 
     static async getAllProductsAndShopsData(): Promise<AllProductsShopsDataRecord[]> {
-        const [results] = await pool.execute("SELECT `products`.`name` AS `productName`, `products`.`price` AS `productPrice`, `products`.`description` AS `description`, `products`.`shop_id` AS `shopId`, `shops`.`name` AS `shopName`, `shops`.`category` AS `category`, `shops`.`url` AS `url` FROM `products` JOIN `shops` ON `products`.`shop_id` = `shops`.`id` ORDER BY `products`.`name` ASC") as AllProductsShopsDataRecords;
+        const [results] = await pool.execute("SELECT `products`.`id` AS `productId`, `products`.`name` AS `productName`, `products`.`price` AS `productPrice`, `products`.`description` AS `description`, `products`.`shop_id` AS `shopId`, `shops`.`name` AS `shopName`, `shops`.`category` AS `category`, `shops`.`url` AS `url` FROM `products` JOIN `shops` ON `products`.`shop_id` = `shops`.`id` ORDER BY `products`.`name` ASC") as AllProductsShopsDataRecords;
         return results.map(record => new AllProductsShopsDataRecord(record));
     }
 }
